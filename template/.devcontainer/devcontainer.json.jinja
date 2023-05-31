@@ -1,0 +1,66 @@
+{
+    "name": "Jupyter",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/jovyan/work,type=bind",
+    "workspaceFolder": "/home/jovyan/work",
+
+    "forwardPorts": [8888],
+    "overrideCommand": true,
+    "postStartCommand": "nohup bash -c 'jupyter {{ 'lab' if use_jupyterlab else 'server' }} --allow-root --ip 0.0.0.0 --ServerApp.allow_origin=\"*\" &'",
+
+    "remoteUser": "root",
+    "runArgs": [
+        "--user=root",
+        "--env=GRANT_SUDO=yes",
+        "--memory=1.8g",
+        "--cpu-shares=300"
+    ],
+
+    "customizations": {
+
+        "vscode": {
+            "settings": {
+            
+            {%- if use_vscode_ext -%}
+
+                {%- if 'Python' in dev_language %}
+                "python.defaultInterpreterPath": "/opt/conda/bin/python",
+                {%- endif %}
+
+                {%- if 'R' in dev_language %}
+                "r.rterm.linux": "/opt/conda/bin/radian",
+                "r.bracketedPaste": true,
+                "r.plot.useHttpgd": true
+                {%- endif %}
+
+            {%- endif %}
+            },
+            "extensions": [
+
+            {%- if use_vscode_ext -%}
+
+                {%- if 'Python' in dev_language %}
+                "ms-python.python",
+                "ms-toolsai.jupyter",
+                "ms-toolsai.jupyter-keymap",
+                {%- endif %}
+
+                {%- if use_quarto %}
+                "quarto.quarto",
+                {%- endif %}
+
+                {%- if 'R' in dev_language %}
+                "reditorsupport.r",
+                "RDebugger.r-debugger",
+                {%- endif %}
+
+            {%- endif %}
+                "analytic-signal.preview-pdf"
+            ]
+        }
+
+    }
+}

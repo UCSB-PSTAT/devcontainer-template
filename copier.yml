@@ -3,6 +3,37 @@ project_name:
     type: str
     help: What is your project names?
 
-module_name:
+dev_language:
     type: str
-    help: What is your Python module names?
+    help: What language(s) will you use in this project?
+    choices:
+        R: null
+        Python: null
+        R and Python: null
+
+use_vscode_ext:
+    type: bool
+    help: Do you want to install Visual Studio Code extensions for Jupyter notebooks, {{ dev_language }}?
+    default: yes
+
+use_jupyterlab:
+    type: bool
+    help: Install Jupyter Lab? Jupyter Lab is optional if using VS Code and Python extensions for development.
+    default: no
+
+use_rstudio:
+    type: bool
+    help: Install Rstudio? Rstudio is optional if using VS Code and R extensions for development.
+    default: no
+    when: "{{ 'R' in dev_language }}"
+
+use_quarto:
+    type: bool
+    help: Install Quarto? Quarto is optional publishing system compatible with {{ dev_language }}.
+    default: no
+
+_subdirectory: template
+
+_exclude:
+    - "copier.yml"
+    - ".git"
