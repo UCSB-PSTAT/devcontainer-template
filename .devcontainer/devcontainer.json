@@ -22,9 +22,9 @@
 				"python.defaultInterpreterPath": "/opt/conda/bin/python"
 			},
 			"extensions": [
-				"ms-python.python",							// for Python
-				"ms-toolsai.jupyter",						// for Python
-				"ms-toolsai.jupyter-keymap", 				// for Python
+				"ms-python.python",
+				"ms-toolsai.jupyter",
+				"ms-toolsai.jupyter-keymap",
 				"analytic-signal.preview-pdf"
 			]
 		}
