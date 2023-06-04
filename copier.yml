@@ -1,4 +1,3 @@
-# questions
 project_name:
     type: str
     help: What is your project names?
