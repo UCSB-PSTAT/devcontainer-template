@@ -11,7 +11,7 @@ To create your setup, follow these steps:
 1. [Start a terminal session on Binder](https://mybinder.org/v2/gh/UCSB-PSTAT/devcontainer-template/HEAD?urlpath=terminals%2F1).
 1. Enter the following command to generate your starter code to directory named `starter-code`: 
     ```bash
-    copier gh:UCSB-PSTAT/devcontainer-template starter-code
+    copier copy gh:UCSB-PSTAT/devcontainer-template starter-code
     ```
 1. View generated files:
     ```bash
@@ -32,7 +32,10 @@ To create your setup, follow these steps:
     ```bash
     cd /home/jovyan/starter-code
     git init
-    
+    git add *
+    git commit -m "first commit"
+    git branch -M main
+    gh repo create # follow interactive prompts
     ```
 
 ## Download

@@ -6,14 +6,8 @@
 	"workspaceMount": "source=${localWorkspaceFolder},target=/home/jovyan/work,type=bind",
 	"workspaceFolder": "/home/jovyan/work",
 
-    "remoteUser": "root",
-
 	"forwardPorts": [8888],
 	"overrideCommand": false,
-
-	"runArgs": [
-		"--user=root"
-	],
 
     "customizations": {
 
@@ -22,6 +16,7 @@
 				"python.defaultInterpreterPath": "/opt/conda/bin/python"
 			},
 			"extensions": [
+				"github.copilot",
 				"ms-python.python",
 				"ms-toolsai.jupyter",
 				"ms-toolsai.jupyter-keymap",
