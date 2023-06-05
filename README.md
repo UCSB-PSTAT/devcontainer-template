@@ -25,17 +25,20 @@ To create your setup, follow these steps:
 
 1. Authenticate with your GitHub account:
     ```bash
-    cd /home/jovyan # where gh is located
-    ./gh auth login
+    /home/jovyan/gh auth login
     ```
-1. Convert generated files to a repository and upload to GitHub:
+1. Convert generated files to a repository:
     ```bash
     cd /home/jovyan/starter-code
     git init
     git add *
     git commit -m "first commit"
     git branch -M main
-    gh repo create # follow interactive prompts
+    ```
+1. Upload local repository to a new GitHub repository. **Be sure to choose, "Push an existing local repository to GitHub"**:
+    ```bash
+    cd /home/jovyan/starter-code
+    /home/jovyan/gh repo create 
     ```
 
 ## Download
