@@ -7,8 +7,11 @@ This template repository creates a starter [development container](https://compu
 To create your setup, follow these steps:
 
 1. [Start a terminal session on Binder](https://mybinder.org/v2/gh/UCSB-PSTAT/devcontainer-template/HEAD?urlpath=terminals%2F1).
-1. Setup `git` user information:  
+1. Enter the following command to generate your starter code to directory named `starter-code`: 
     ```bash
-    git config --global user.email "you@example.com"
-    git config --global user.name "Your Name"
+    copier gh:UCSB-PSTAT/devcontainer-template.git starter-code
+    ```
+1. View contents:
+    ```bash
+    tree -a starter-code
     ```

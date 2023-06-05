@@ -31,6 +31,11 @@ use_quarto:
     help: Install Quarto? Quarto is optional publishing system compatible with {{ dev_language }}.
     default: no
 
+include_examples:
+    type: bool
+    help: Do you want to include example files?
+    default: yes
+
 _subdirectory: template
 
 _exclude:
