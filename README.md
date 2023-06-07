@@ -35,7 +35,8 @@ To create your setup, follow these steps:
     git commit -m "first commit"
     git branch -M main
     ```
-1. Upload local repository to a new GitHub repository. **Be sure to choose, "Push an existing local repository to GitHub"**:
+1. Upload local repository to a new GitHub repository.  
+    **Be sure to choose, "Push an existing local repository to GitHub"**:
     ```bash
     cd /home/jovyan/starter-code
     /home/jovyan/gh repo create 

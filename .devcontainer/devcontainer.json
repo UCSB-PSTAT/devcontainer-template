@@ -1,5 +1,5 @@
 {
-    "name": "Jupyter",
+    "name": "Devcontainer Template",
     "build": {
         "dockerfile": "Dockerfile"
     },
