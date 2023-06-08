@@ -11,7 +11,7 @@ USER root
 ### System dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        lmodern file curl && \
+        lmodern file curl tmux && \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* /tmp/library-scripts
 
