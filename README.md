@@ -50,4 +50,5 @@ To create your setup, follow these steps:
     ```
 1. Click on Jupyter logo to open Jupyter Lab.
 1. Download the zipfile, `starter-code.zip`
+1. Once downloaded, unzip the contents and add the `.devcontainer` folder to the root of your project folder.
 
