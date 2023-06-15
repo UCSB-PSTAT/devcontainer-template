@@ -12,14 +12,51 @@ To create your setup, follow these steps:
 1. Enter the following command to generate your starter code to directory named `starter-code`: 
     ```bash
     copier copy gh:UCSB-PSTAT/devcontainer-template starter-code
+    ```  
+    The output would look similar to the following:  
     ```
+    jovyan@jupyter-ucsb-2dpstat-2ddevcontainer-2dtemplate-2dfpo1c8gv:~$ copier copy gh:UCSB-PSTAT/devcontainer-template starter-code
+    🎤 What is your project names?
+    qwer
+    🎤 What language(s) will you use in this project?
+    R and Python
+    🎤 Do you want to install Visual Studio Code extensions for Jupyter notebooks, R and Python?
+    Yes
+    🎤 Install Jupyter Lab? Jupyter Lab is optional if using VS Code and Python extensions for development.
+    No
+    🎤 Install Rstudio? Rstudio is optional if using VS Code and R extensions for development.
+    No
+    🎤 Install Quarto? Quarto is optional publishing system compatible with R and Python.
+    No
+    🎤 Do you want to include example files?
+    Yes
+
+    Copying from template version 1.0.0
+        create  .
+        create  example.Rmd
+        create  .devcontainer
+        create  .devcontainer/Dockerfile
+        create  .devcontainer/devcontainer.json
+    ```
+
 1. View generated files:
     ```bash
     tree -a starter-code
+    ```  
+    The output would look similar to the follwing:  
+    ```
+    jovyan@jupyter-ucsb-2dpstat-2ddevcontainer-2dtemplate-2dfpo1c8gv:~$ tree -a starter-code/
+    starter-code/
+    ├── .devcontainer
+    │   ├── devcontainer.json
+    │   └── Dockerfile
+    └── example.Rmd
+
+    1 directory, 3 files
     ```
 1. Use generated files:  
-    - (Recommended) [Upload `starter-code` to a GitHub repository](#upload-to-github-repository) 
-    - [Create and download a zip file](#download)
+    - [Upload `starter-code` to a GitHub repository](#upload-to-github-repository) to start a new repository for your project.
+    - [Create and download a zip file](#download) to manually add `.devcontainer` directory and its contents to an existing project.
 
 ## Upload to GitHub Repository
 

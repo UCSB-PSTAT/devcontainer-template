@@ -17,4 +17,4 @@ RUN echo "echo \"Jupyter server token: \$(jupyter server list 2>&1 | grep -oP '(
 ENV GH_VERSION=2.30.0
 RUN wget https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_amd64.tar.gz -O - | tar xvzf - gh_${GH_VERSION}_linux_amd64/bin/gh --strip-components=2
 
-RUN pip install copier
+RUN pip install copier==8.0.0
