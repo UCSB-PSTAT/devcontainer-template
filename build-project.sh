@@ -2,7 +2,7 @@
 
 valid_directory=false
 while [ "$valid_directory" = false ]; do
-    read -p "Enter a project name: " directory_name
+    read -p "Enter a project name (alphanumeric with only dashes or underscores): " directory_name
     if [[ "$directory_name" =~ ^[a-zA-Z0-9_-]+$ ]]; then
         valid_directory=true
     else
@@ -215,9 +215,10 @@ cd ./.devcontainer
 touch devcontainer.json
 echo "    create $directory_name/.devcontainer/devcontainer.json"
 
-echo $'{
-    "name": "{{ project_name }}",
-    "build": {
+echo "{
+    \"name\": \"$directory_name\"," \
+> "devcontainer.json"
+echo $'    "build": {
         "dockerfile": "Dockerfile"
     },
 
@@ -225,9 +226,18 @@ echo $'{
     "workspaceFolder": "/home/jovyan/work",
 
     "forwardPorts": [8888],
-    "overrideCommand": true,
-    "postStartCommand": "nohup bash -c \'jupyter {{ \'lab\' if use_jupyterlab else \'server\' }} --allow-root --ip 0.0.0.0 --ServerApp.allow_origin=\\"*\\" &\'",
+    "overrideCommand": true,' \
+>> "devcontainer.json"
 
+if [ "$jupyterlab" = true ]; then
+echo $'    "postStartCommand": "nohup bash -c \'jupyter lab --allow-root --ip 0.0.0.0 --ServerApp.allow_origin=\\"*\\" &\'",' \
+>> "devcontainer.json"
+else
+echo $'    "postStartCommand": "nohup bash -c \'jupyter server --allow-root --ip 0.0.0.0 --ServerApp.allow_origin=\\"*\\" &\'",' \
+>> "devcontainer.json"
+fi
+
+echo $'
     "remoteUser": "root",
     "runArgs": [
         "--user=root",
@@ -240,7 +250,7 @@ echo $'{
 
         "vscode": {
             "settings": {' \
-> "devcontainer.json"
+>> "devcontainer.json"
 if [ "$extension" = true ]; then
     if [ "$python" = true ]; then
         echo $'
@@ -372,7 +382,7 @@ fi
 if [ "$r" = true ]; then
 echo $'
 ## R compiler settings
-RUN R -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ dir.create(dotR) }; Makevars <- file.path(dotR, 'Makevars'); if (!file.exists(Makevars)){  file.create(Makevars) }; cat('\nCXX14FLAGS=-O3 -fPIC -Wno-unused-variable -Wno-unused-function', 'CXX14 = g++ -std=c++1y -fPIC', 'CXX = g++', 'CXX11 = g++', file = Makevars, sep = '\n', append = TRUE)"' \
+RUN R -e "dotR <- file.path(Sys.getenv(\'HOME\'), \'.R\'); if(!file.exists(dotR)){ dir.create(dotR) }; Makevars <- file.path(dotR, \'Makevars\'); if (!file.exists(Makevars)){  file.create(Makevars) }; cat(\'\\nCXX14FLAGS=-O3 -fPIC -Wno-unused-variable -Wno-unused-function\', \'CXX14 = g++ -std=c++1y -fPIC\', \'CXX = g++\', \'CXX11 = g++\', file = Makevars, sep = \'\\n\', append = TRUE)"' \
 >> "./Dockerfile"
 fi
 
@@ -393,7 +403,7 @@ RUN pip install nbgitpuller && \
     jupyter serverextension enable --py nbgitpuller --sys-prefix 
 
 ### Prints Jupyter server token when terminal is opened
-RUN echo "echo \"Jupyter server token: \$(jupyter server list 2>&1 | grep -oP \'(?<=token=)[[:alnum:]]*\')\"" > ${HOME}/.get-jupyter-url.sh && \
+RUN echo "echo \\"Jupyter server token: \\$(jupyter server list 2>&1 | grep -oP \'(?<=token=)[[:alnum:]]*\')\\"" > ${HOME}/.get-jupyter-url.sh && \
     echo "sh \${HOME}/.get-jupyter-url.sh" >> ${HOME}/.bashrc' \
 >> "./Dockerfile"
 
