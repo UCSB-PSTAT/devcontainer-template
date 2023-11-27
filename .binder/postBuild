@@ -1,8 +1,0 @@
-mkdir .archive && \
-  mv .binder copier.yml .devcontainer .git README.md template .archive
-
-git config --global user.email "UCSB-PSTAT"
-git config --global user.name "UCSB-PSTAT"
-
-GH_VERSION=2.30.0
-wget https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_amd64.tar.gz -O - | tar xvzf - gh_${GH_VERSION}_linux_amd64/bin/gh --strip-components=2
