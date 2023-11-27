@@ -2,6 +2,13 @@ project_name:
     type: str
     help: What is the name of your project?
 
+rootless_rootful:
+    type: str
+    help: Are you working on Alta or Jetstream2?
+    choices:
+        Alta (UCSB PSTAT Server): null
+        Jetstream2 (NSF ACCESS Supercompting): null
+
 dev_language:
     type: str
     help: What language(s) will you use in this project?
