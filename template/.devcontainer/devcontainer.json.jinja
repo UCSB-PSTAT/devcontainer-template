@@ -11,10 +11,14 @@
     "overrideCommand": true,
     "postStartCommand": "nohup bash -c 'jupyter {{ 'lab' if use_jupyterlab else 'server' }} --allow-root --ip 0.0.0.0 --ServerApp.allow_origin=\"*\" &'",
 
+    {%- if 'Jetstream' in rootless_rootful %}
     "remoteUser": "root",
+    {%- endif %}
     "runArgs": [
+        {%- if 'Jetstream' in rootless_rootful %}
         "--user=root",
         "--env=GRANT_SUDO=yes",
+        {%- endif %}
         "--memory=1.8g",
         "--cpu-shares=300"
     ],
@@ -62,5 +66,7 @@
             ]
         }
 
-    }
+    },
+    // Uncomment the next line if you want to keep your containers running after VS Code shuts down.
+	"shutdownAction": "none"
 }
