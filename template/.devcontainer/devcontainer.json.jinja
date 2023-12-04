@@ -19,8 +19,10 @@
         "--user=root",
         "--env=GRANT_SUDO=yes",
         {%- endif %}
+        {%- if 'Alta' in rootless_rootful %}
         "--memory=1.8g",
         "--cpu-shares=300"
+        {%- endif %}
     ],
 
     "customizations": {
@@ -62,6 +64,7 @@
                 {%- endif %}
 
             {%- endif %}
+                "ms-vscode.live-server",
                 "analytic-signal.preview-pdf"
             ]
         }

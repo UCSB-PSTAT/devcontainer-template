@@ -27,12 +27,6 @@ use_jupyterlab:
     help: Install Jupyter Lab? Jupyter Lab is optional if using VS Code and Python extensions for development.
     default: no
 
-use_rstudio:
-    type: bool
-    help: Install Rstudio? Rstudio is optional if using VS Code and R extensions for development.
-    default: no
-    when: "{{ 'R' in dev_language }}"
-
 use_quarto:
     type: bool
     help: Install Quarto? Quarto is optional publishing system compatible with {{ dev_language }}.
