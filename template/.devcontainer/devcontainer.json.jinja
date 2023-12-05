@@ -1,8 +1,13 @@
 {
     "name": "{{ project_name }}",
+    {% if 'Jetstream' in rootless_rootful -%}
     "build": {
         "dockerfile": "Dockerfile"
     },
+    {% elif 'Alta' in rootless_rootful -%}
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "app"
+    {%- endif %}
 
     "workspaceMount": "source=${localWorkspaceFolder},target=/home/jovyan/work,type=bind",
     "workspaceFolder": "/home/jovyan/work",
@@ -18,8 +23,7 @@
         {%- if 'Jetstream' in rootless_rootful %}
         "--user=root",
         "--env=GRANT_SUDO=yes",
-        {%- endif %}
-        {%- if 'Alta' in rootless_rootful %}
+        {%- elif 'Alta' in rootless_rootful %}
         "--memory=1.8g",
         "--cpu-shares=300"
         {%- endif %}
