@@ -5,8 +5,8 @@
         "dockerfile": "Dockerfile"
     },
     {% elif 'Alta' in rootless_rootful -%}
-    "dockerComposeFile": "docker-compose.yml",
-    "service": "app"
+    "dockerComposeFile": ["docker-compose.yml"],
+    "service": "app",
     {%- endif %}
 
     "workspaceMount": "source=${localWorkspaceFolder},target=/home/jovyan/work,type=bind",
@@ -18,6 +18,8 @@
 
     {%- if 'Jetstream' in rootless_rootful %}
     "remoteUser": "root",
+    {%- elif 'Alta' in rootless_rootful %}
+    "remoteUser": "jovyan",
     {%- endif %}
     "runArgs": [
         {%- if 'Jetstream' in rootless_rootful %}
