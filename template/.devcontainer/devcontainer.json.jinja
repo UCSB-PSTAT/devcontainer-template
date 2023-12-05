@@ -9,12 +9,7 @@
     "service": "app",
     {%- endif %}
 
-    "workspaceMount": "source=${localWorkspaceFolder},target=/home/jovyan/work,type=bind",
     "workspaceFolder": "/home/jovyan/work",
-
-    "forwardPorts": [8888],
-    "overrideCommand": true,
-    "postStartCommand": "nohup bash -c 'jupyter {{ 'lab' if use_jupyterlab else 'server' }} --allow-root --ip 0.0.0.0 --ServerApp.allow_origin=\"*\" &'",
 
     {%- if 'Jetstream' in rootless_rootful %}
     "remoteUser": "root",
