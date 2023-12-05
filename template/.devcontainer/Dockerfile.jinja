@@ -18,15 +18,15 @@ RUN apt-get update && \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* /tmp/library-scripts
 
-### R compiler settings
 {% if 'R' in dev_language -%}
+### R compiler settings
 RUN R -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ dir.create(dotR) }; Makevars <- file.path(dotR, 'Makevars'); if (!file.exists(Makevars)){  file.create(Makevars) }; cat('\nCXX14FLAGS=-O3 -fPIC -Wno-unused-variable -Wno-unused-function', 'CXX14 = g++ -std=c++1y -fPIC', 'CXX = g++', 'CXX11 = g++', file = Makevars, sep = '\n', append = TRUE)"
 {%- endif %}
 
+{% if use_quarto -%}
 ### Quarto
 # versions: https://quarto.org/docs/download/_download.json
 # neat setup: https://github.com/jeremiahpslewis/reproducibility-with-quarto
-{% if use_quarto -%}
 ENV QUARTO_VERSION 1.3.450
 RUN curl --silent -L --fail \
         https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb > /tmp/quarto.deb && \
@@ -37,14 +37,15 @@ RUN curl --silent -L --fail \
 
 USER ${NB_USER}
 
-### R development
 {% if ('R' in dev_language) and (use_vscode_ext) -%}
+### R development
 RUN pip install radian && \
     R -q -e 'install.packages(c("markdown", "languageserver", "httpgd"), repos="cloud.r-project.org")' &&\
     R -q -e 'remotes::install_github("ManuelHentschel/vscDebugger")'
 {%- endif %}
 
 {% if use_quarto %}
+### Quarto
 RUN pip install jupyterlab-quarto
 {%- endif %}
 

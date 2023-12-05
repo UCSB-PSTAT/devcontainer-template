@@ -18,8 +18,6 @@
 
     {%- if 'Jetstream' in rootless_rootful %}
     "remoteUser": "root",
-    {%- elif 'Alta' in rootless_rootful %}
-    "remoteUser": "jovyan",
     {%- endif %}
     "runArgs": [
         {%- if 'Jetstream' in rootless_rootful %}
