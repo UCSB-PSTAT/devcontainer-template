@@ -4,17 +4,39 @@ FROM docker.io/jupyter/datascience-notebook:r-4.3.1
 FROM docker.io/jupyter/scipy-notebook:python-3.11.6
 {%- elif dev_language == 'R' -%}
 FROM docker.io/jupyter/r-notebook:r-4.3.1
-{%- endif %}
+{%- endif -%}
 
+{%- if use_quarto or use_rstudio -}
+### Environment variables
+{%- if use_quarto -}
+ENV QUARTO_VERSION 1.4.549
+{%- endif -%}
+{%- if use_rstudio -}
+ENV R_STUDIO_VERSION 2023.12.1-402
+{%- endif -%}
+
+###########################
+### SYSTEM INSTALLATION ###
+###########################
 USER root
 
-### System dependencies
+### System dependencies. Feel free to add packages as necessary.
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+        # Basic system usage
         lmodern \
         file \
         curl \
-        tmux && \
+        tmux \
+        {%- if use_rstudio -}
+        # Dependencies for RStudio
+        psmisc \
+        lsb-release \
+        libssl-dev \
+        libclang-dev \
+        libpq5 \ 
+        {%- endif -%}
+        && \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* /tmp/library-scripts
 
@@ -23,7 +45,7 @@ RUN apt-get update && \
 RUN R -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ dir.create(dotR) }; Makevars <- file.path(dotR, 'Makevars'); if (!file.exists(Makevars)){  file.create(Makevars) }; cat('\nCXX14FLAGS=-O3 -fPIC -Wno-unused-variable -Wno-unused-function', 'CXX14 = g++ -std=c++1y -fPIC', 'CXX = g++', 'CXX11 = g++', file = Makevars, sep = '\n', append = TRUE)"
 {%- endif %}
 
-{% if use_quarto -%}
+{%- if use_quarto %}
 ### Quarto
 # versions: https://quarto.org/docs/download/_download.json
 # neat setup: https://github.com/jeremiahpslewis/reproducibility-with-quarto
@@ -32,21 +54,40 @@ RUN curl --silent -L --fail \
         https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb > /tmp/quarto.deb && \
     apt-get update && \
     apt-get install -y --no-install-recommends /tmp/quarto.deb && \
-    rm -rf /tmp/quarto.deb /var/lib/apt/lists/* /tmp/library-script
+    rm -rf /tmp/quarto.deb /var/lib/apt/lists/* /tmp/library-script && \
+    apt-get clean
 {%- endif %}
 
+{%- if use_rstudio %}
+### Install rstudio from source package
+RUN wget -q https://download2.rstudio.org/server/jammy/amd64/rstudio-server-${R_STUDIO_VERSION}-amd64.deb && \
+    apt-get install -yq --no-install-recommends ./rstudio*.deb && \
+    rm -f ./rstudio*.deb && \
+    apt-get clean && \
+    chmod 777 /var/run/rstudio-server && \
+    chmod +t /var/run/rstudio-server
+{%- endif %}
+
+#########################
+### USER INSTALLATION ###
+#########################
 USER ${NB_USER}
+
+RUN mamba install -y -c conda-forge --freeze-installed jupyter-server-proxy {%- if 'R' in dev_language -%}jupyter-rsession-proxy{%- endif -%} && \
+    mamba clean --all && \
+    pip install nbgitpuller && \
+    jupyter labextension enable --py nbgitpuller
+
+{% if use_quarto %}
+### Quarto
+RUN pip install jupyterlab-quarto
+{%- endif %}
 
 {% if ('R' in dev_language) and (use_vscode_ext) -%}
 ### R development
 RUN pip install radian && \
     R -q -e 'install.packages(c("markdown", "languageserver", "httpgd"), repos="cloud.r-project.org")' &&\
     R -q -e 'remotes::install_github("ManuelHentschel/vscDebugger")'
-{%- endif %}
-
-{% if use_quarto %}
-### Quarto
-RUN pip install jupyterlab-quarto
 {%- endif %}
 
 ### Prints Jupyter server token when terminal is opened

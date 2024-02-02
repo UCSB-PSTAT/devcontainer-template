@@ -1,74 +1,65 @@
 {
     "name": "{{ project_name }}",
-    {% if 'Jetstream' in rootless_rootful -%}
     "build": {
         "dockerfile": "Dockerfile"
     },
-    {% elif 'Alta' in rootless_rootful -%}
-    "dockerComposeFile": ["docker-compose.yml"],
-    "service": "app",
-    {%- endif %}
+    "remoteUser": "jovyan",
 
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/jovyan/work,type=bind",
     "workspaceFolder": "/home/jovyan/work",
 
-    {%- if 'Jetstream' in rootless_rootful %}
-    "remoteUser": "root",
-    {%- endif %}
     "runArgs": [
-        {%- if 'Jetstream' in rootless_rootful %}
-        "--user=root",
-        "--env=GRANT_SUDO=yes",
-        {%- elif 'Alta' in rootless_rootful %}
+        {%- if 'Jetstream' in docker_podman %}
+        "--userns=keep-id"
+        {%- elif 'Alta' in docker_podman %}
         "--memory=1.8g",
         "--cpu-shares=300"
         {%- endif %}
     ],
 
     "customizations": {
-
         "vscode": {
             "settings": {
-            
-            {%- if use_vscode_ext -%}
-
+            {%- if use_vscode_ext %}
                 {%- if 'Python' in dev_language %}
                 "python.defaultInterpreterPath": "/opt/conda/bin/python",
                 {%- endif %}
-
                 {%- if 'R' in dev_language %}
                 "r.rterm.linux": "/opt/conda/bin/radian",
                 "r.bracketedPaste": true,
                 "r.plot.useHttpgd": true
                 {%- endif %}
-
             {%- endif %}
             },
             "extensions": [
-
             {%- if use_vscode_ext -%}
-
                 {%- if 'Python' in dev_language %}
-                "ms-python.python",
-                "ms-toolsai.jupyter",
-                "ms-toolsai.jupyter-keymap",
+				"ms-python.python",							// for Python
+				"ms-toolsai.jupyter",						// for Python
+				"ms-toolsai.jupyter-keymap", 				// for Python
                 {%- endif %}
-
                 {%- if use_quarto %}
-                "quarto.quarto",
+				"quarto.quarto",							// for Python and R
                 {%- endif %}
-
                 {%- if 'R' in dev_language %}
-                "reditorsupport.r",
-                "RDebugger.r-debugger",
+				"reditorsupport.r",							// for R
+				"RDebugger.r-debugger",						// for R
                 {%- endif %}
-
             {%- endif %}
                 "ms-vscode.live-server",
                 "analytic-signal.preview-pdf"
             ]
         }
-
     },
+    "forwardPorts": [8888],
+    // Naming the Jupyterlab port.
+    "portsAttributes": {
+        "8888": {
+            "label": "Jupyterlab",
+			"onAutoForward": "ignore"
+        }
+    },
+	"overrideCommand": false,
     // Uncomment the next line if you want to keep your containers running after VS Code shuts down.
 	"shutdownAction": "none"
 }

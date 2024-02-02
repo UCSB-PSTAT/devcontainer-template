@@ -2,7 +2,7 @@ project_name:
     type: str
     help: What is the name of your project?
 
-rootless_rootful:
+podman_docker:
     type: str
     help: Are you working on Alta or Jetstream2?
     choices:
@@ -19,13 +19,17 @@ dev_language:
 
 use_vscode_ext:
     type: bool
-    help: Do you want to install Visual Studio Code extensions for Jupyter notebooks, {{ dev_language }}?
+    help: Do you want to install Visual Studio Code extensions for Jupyter notebooks using {{ dev_language }}?
     default: yes
 
-use_jupyterlab:
+use_rstudio:
     type: bool
-    help: Install Jupyter Lab? Jupyter Lab is optional if using VS Code and Python extensions for development.
-    default: no
+    help: Install RStudio server? This will be accessible via Jupyter Lab.
+
+# use_jupyterlab:
+#     type: bool
+#     help: Install Jupyter Lab? Jupyter Lab is optional if using VS Code and Python extensions for development.
+#     default: no
 
 use_quarto:
     type: bool
