@@ -3,24 +3,34 @@
     "build": {
         "dockerfile": "Dockerfile"
     },
-    "remoteUser": "jovyan",
 
-    "workspaceMount": "source=${localWorkspaceFolder},target=/home/jovyan/work,type=bind",
+    "updateRemoteUserUID": false,
+    "overrideCommand": false,
+    "shutdownAction": "none",
+
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/jovyan/work,type=bind,z",
     "workspaceFolder": "/home/jovyan/work",
 
     "runArgs": [
-        {%- if 'Jetstream' in docker_podman %}
-        "--userns=keep-id"
-        {%- elif 'Alta' in docker_podman %}
-        "--memory=1.8g",
-        "--cpu-shares=300"
-        {%- endif %}
+        "--user=1000:100",
+        "--userns=keep-id:uid=1000,gid=100",
+        "--name={{ project_name }}", // needs to be unique
+        "--hostname={{ project_name }}_container" // needs to be unique
     ],
+
+    "forwardPorts": [8888],
+    "portsAttributes": {
+        "8888": {
+            // Naming the Jupyterlab port
+            "label": "Jupyterlab",
+            // Disable autoforwarding of ports (by default, only 8888 is necessary)
+            "onAutoForward": "ignore"
+        }
+    },
 
     "customizations": {
         "vscode": {
             "settings": {
-            {%- if use_vscode_ext %}
                 {%- if 'Python' in dev_language %}
                 "python.defaultInterpreterPath": "/opt/conda/bin/python",
                 {%- endif %}
@@ -29,37 +39,25 @@
                 "r.bracketedPaste": true,
                 "r.plot.useHttpgd": true
                 {%- endif %}
-            {%- endif %}
             },
             "extensions": [
-            {%- if use_vscode_ext -%}
+                {%- if use_vscode_ext %}
                 {%- if 'Python' in dev_language %}
-				"ms-python.python",							// for Python
-				"ms-toolsai.jupyter",						// for Python
-				"ms-toolsai.jupyter-keymap", 				// for Python
+                "ms-python.python",             // for Python
+                "ms-toolsai.jupyter",           // for Python
+                "ms-toolsai.jupyter-keymap",    // for Python
                 {%- endif %}
                 {%- if use_quarto %}
-				"quarto.quarto",							// for Python and R
+                "quarto.quarto",                // for Python and R
                 {%- endif %}
                 {%- if 'R' in dev_language %}
-				"reditorsupport.r",							// for R
-				"RDebugger.r-debugger",						// for R
+                "reditorsupport.r",             // for R
+                "RDebugger.r-debugger",         // for R
                 {%- endif %}
-            {%- endif %}
+                {%- endif %}
                 "ms-vscode.live-server",
                 "analytic-signal.preview-pdf"
             ]
         }
-    },
-    "forwardPorts": [8888],
-    // Naming the Jupyterlab port.
-    "portsAttributes": {
-        "8888": {
-            "label": "Jupyterlab",
-			"onAutoForward": "ignore"
-        }
-    },
-	"overrideCommand": false,
-    // Uncomment the next line if you want to keep your containers running after VS Code shuts down.
-	"shutdownAction": "none"
+    }
 }

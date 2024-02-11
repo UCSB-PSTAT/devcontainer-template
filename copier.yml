@@ -1,13 +1,10 @@
 project_name:
     type: str
-    help: What is the name of your project?
-
-podman_docker:
-    type: str
-    help: Are you working on Alta or Jetstream2?
-    choices:
-        Alta (UCSB PSTAT Server): null
-        Jetstream2 (NSF ACCESS Supercompting): null
+    help: What is the name of your project? (Must be unique and use lowercase, dashes -, underscores _ ONLY)
+    validator: >-
+        {% if not (project_name | regex_search('^[a-z][a-z0-9\-\_]+$')) %}
+        Project name must start with a letter, followed one or more letters, digits or dashes all lowercase.
+        {% endif %}
 
 dev_language:
     type: str
@@ -24,12 +21,8 @@ use_vscode_ext:
 
 use_rstudio:
     type: bool
-    help: Install RStudio server? This will be accessible via Jupyter Lab.
-
-# use_jupyterlab:
-#     type: bool
-#     help: Install Jupyter Lab? Jupyter Lab is optional if using VS Code and Python extensions for development.
-#     default: no
+    help: Install RStudio Server? This will be accessible via Jupyterlab.
+    default: no
 
 use_quarto:
     type: bool
