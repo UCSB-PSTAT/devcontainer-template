@@ -21,7 +21,7 @@ use_vscode_ext:
 
 use_rstudio:
     type: bool
-    help: Install RStudio Server? This will be accessible via Jupyterlab.
+    help: Install RStudio Server? This is optional if using VS Code and R extensions for development.
     default: no
 
 use_quarto:
