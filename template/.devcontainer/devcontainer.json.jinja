@@ -1,7 +1,8 @@
 {
     "name": "{{ project_name }}",
     "build": {
-        "dockerfile": "Dockerfile"
+        "dockerfile": "Dockerfile",
+        "options": ["--format=docker"]
     },
 
     "updateRemoteUserUID": false,
