@@ -1,74 +1,64 @@
 {
     "name": "{{ project_name }}",
-    {% if 'Jetstream' in rootless_rootful -%}
     "build": {
-        "dockerfile": "Dockerfile"
+        "dockerfile": "Dockerfile",
+        "options": ["--format=docker"]
     },
-    {% elif 'Alta' in rootless_rootful -%}
-    "dockerComposeFile": ["docker-compose.yml"],
-    "service": "app",
-    {%- endif %}
 
+    "updateRemoteUserUID": false,
+    "overrideCommand": false,
+    "shutdownAction": "none",
+
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/jovyan/work,type=bind,z",
     "workspaceFolder": "/home/jovyan/work",
 
-    {%- if 'Jetstream' in rootless_rootful %}
-    "remoteUser": "root",
-    {%- endif %}
     "runArgs": [
-        {%- if 'Jetstream' in rootless_rootful %}
-        "--user=root",
-        "--env=GRANT_SUDO=yes",
-        {%- elif 'Alta' in rootless_rootful %}
-        "--memory=1.8g",
-        "--cpu-shares=300"
-        {%- endif %}
+        "--user=1000:100",
+        "--userns=keep-id:uid=1000,gid=100",
+        "--name={{ project_name }}", // needs to be unique
+        "--hostname={{ project_name }}_container" // needs to be unique
     ],
 
-    "customizations": {
+    "forwardPorts": [8888],
+    "portsAttributes": {
+        "8888": {
+            // Naming the Jupyterlab port
+            "label": "Jupyterlab",
+            // Disable autoforwarding of ports (by default, only 8888 is necessary)
+            "onAutoForward": "ignore"
+        }
+    },
 
+    "customizations": {
         "vscode": {
             "settings": {
-            
-            {%- if use_vscode_ext -%}
-
                 {%- if 'Python' in dev_language %}
                 "python.defaultInterpreterPath": "/opt/conda/bin/python",
                 {%- endif %}
-
                 {%- if 'R' in dev_language %}
                 "r.rterm.linux": "/opt/conda/bin/radian",
                 "r.bracketedPaste": true,
                 "r.plot.useHttpgd": true
                 {%- endif %}
-
-            {%- endif %}
             },
             "extensions": [
-
-            {%- if use_vscode_ext -%}
-
+                {%- if use_vscode_ext %}
                 {%- if 'Python' in dev_language %}
-                "ms-python.python",
-                "ms-toolsai.jupyter",
-                "ms-toolsai.jupyter-keymap",
+                "ms-python.python",             // for Python
+                "ms-toolsai.jupyter",           // for Python
+                "ms-toolsai.jupyter-keymap",    // for Python
                 {%- endif %}
-
                 {%- if use_quarto %}
-                "quarto.quarto",
+                "quarto.quarto",                // for Python and R
                 {%- endif %}
-
                 {%- if 'R' in dev_language %}
-                "reditorsupport.r",
-                "RDebugger.r-debugger",
+                "reditorsupport.r",             // for R
+                "RDebugger.r-debugger",         // for R
                 {%- endif %}
-
-            {%- endif %}
+                {%- endif %}
                 "ms-vscode.live-server",
                 "analytic-signal.preview-pdf"
             ]
         }
-
-    },
-    // Uncomment the next line if you want to keep your containers running after VS Code shuts down.
-	"shutdownAction": "none"
+    }
 }

@@ -1,29 +1,54 @@
-{%- if dev_language == 'R and Python' -%}
+{%- if dev_language == 'R and Python' %}
 FROM docker.io/jupyter/datascience-notebook:r-4.3.1
-{%- elif dev_language == 'Python' -%}
+{%- elif dev_language == 'Python' %}
 FROM docker.io/jupyter/scipy-notebook:python-3.11.6
-{%- elif dev_language == 'R' -%}
+{%- elif dev_language == 'R' %}
 FROM docker.io/jupyter/r-notebook:r-4.3.1
 {%- endif %}
+{% if use_quarto or use_rstudio %}
+### Environment variables
+{%- if use_quarto %}
+ENV QUARTO_VERSION 1.4.549
+{%- endif %}
+{%- if use_rstudio %}
+ENV R_STUDIO_VERSION 2023.12.1-402
+{%- endif %}
+{%- endif %}
 
+###########################
+### SYSTEM INSTALLATION ###
+###########################
 USER root
 
-### System dependencies
+### System dependencies. Feel free to add packages as necessary.
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        lmodern \
-        file \
-        curl \
-        tmux && \
+        # Basic system usage
+        lmodern=2.004.5-6.1 \
+        file=1:5.41-3ubuntu0.1 \
+        curl=7.81.0-1ubuntu1.15 \
+        g++=4:11.2.0-1ubuntu1 \
+        tmux=3.2a-4ubuntu0.2 \
+        {%- if use_rstudio %}
+        # Dependencies for RStudio
+        psmisc=23.4-2build3 \
+        lsb-release=11.1.0ubuntu4 \
+        libssl-dev \
+        libclang-dev=1:14.0-55~exp2 \
+        libpq5=14.10-0ubuntu0.22.04.1 \
+        libtiff-dev=4.3.0-6ubuntu0.7 \
+        {%- endif %}
+        ##############################################################
+        ### Add your own dependencies as needed below this comment ###
+        ##############################################################
+        && \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* /tmp/library-scripts
-
-{% if 'R' in dev_language -%}
+{% if 'R' in dev_language %}
 ### R compiler settings
 RUN R -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ dir.create(dotR) }; Makevars <- file.path(dotR, 'Makevars'); if (!file.exists(Makevars)){  file.create(Makevars) }; cat('\nCXX14FLAGS=-O3 -fPIC -Wno-unused-variable -Wno-unused-function', 'CXX14 = g++ -std=c++1y -fPIC', 'CXX = g++', 'CXX11 = g++', file = Makevars, sep = '\n', append = TRUE)"
 {%- endif %}
-
-{% if use_quarto -%}
+{% if use_quarto %}
 ### Quarto
 # versions: https://quarto.org/docs/download/_download.json
 # neat setup: https://github.com/jeremiahpslewis/reproducibility-with-quarto
@@ -32,21 +57,44 @@ RUN curl --silent -L --fail \
         https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb > /tmp/quarto.deb && \
     apt-get update && \
     apt-get install -y --no-install-recommends /tmp/quarto.deb && \
-    rm -rf /tmp/quarto.deb /var/lib/apt/lists/* /tmp/library-script
+    rm -rf /tmp/quarto.deb /var/lib/apt/lists/* /tmp/library-script && \
+    apt-get clean
+{%- endif %}
+{% if use_rstudio %}
+### Install rstudio from source package
+RUN wget -q https://download2.rstudio.org/server/jammy/amd64/rstudio-server-${R_STUDIO_VERSION}-amd64.deb && \
+    apt-get install -yq --no-install-recommends ./rstudio*.deb && \
+    rm -f ./rstudio*.deb && \
+    apt-get clean && \
+    chmod 777 /var/run/rstudio-server && \
+    chmod +t /var/run/rstudio-server
 {%- endif %}
 
+#########################
+### USER INSTALLATION ###
+#########################
 USER ${NB_USER}
 
-{% if ('R' in dev_language) and (use_vscode_ext) -%}
-### R development
-RUN pip install radian && \
-    R -q -e 'install.packages(c("markdown", "languageserver", "httpgd"), repos="cloud.r-project.org")' &&\
-    R -q -e 'remotes::install_github("ManuelHentschel/vscDebugger")'
-{%- endif %}
-
+RUN mamba install -y -c conda-forge --freeze-installed \
+        jupyter-server-proxy=4.1.0 \
+        {% if 'R' in dev_language %}jupyter-rsession-proxy=2.2.0{% endif %} \
+        && \
+    mamba clean --all && \
+    pip install nbgitpuller && \
+    jupyter labextension enable nbgitpuller
 {% if use_quarto %}
 ### Quarto
-RUN pip install jupyterlab-quarto
+RUN pip install jupyterlab-quarto==0.2.8
+{%- endif %}
+{% if ('R' in dev_language) %}
+### R development
+RUN pip install radian==0.6.11 && \
+    # Versioned
+    R -q -e 'remotes::install_version("markdown", version="1.12", repos="cloud.r-project.org")' && \
+    R -q -e 'remotes::install_version("languageserver", version="0.3.16", repos="cloud.r-project.org")' && \
+    # Latest Dev Versions
+    R -q -e 'remotes::install_github("nx10/httpgd")' && \
+    R -q -e 'remotes::install_github("ManuelHentschel/vscDebugger")'
 {%- endif %}
 
 ### Prints Jupyter server token when terminal is opened

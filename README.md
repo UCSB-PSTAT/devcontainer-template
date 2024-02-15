@@ -6,22 +6,22 @@ This template repository creates a starter [development container](https://compu
 
 To create your setup, follow these steps:
 
-1. Enter the following command to generate your starter code to directory named `starter-code`: 
+1. Enter the following command to generate your project starter code: 
     ```bash
-    copier copy gh:UCSB-PSTAT/devcontainer-template starter-code
+    copier copy gh:UCSB-PSTAT/devcontainer-template <name-of-project>
     ```  
-    The output would look similar to the following:  
+    where `<name-of-project>` is the name of the directory you wish to save your project files to. The output would look similar to the following:  
     ```
-    jovyan@jupyter-ucsb-2dpstat-2ddevcontainer-2dtemplate-2dfpo1c8gv:~$ copier copy gh:UCSB-PSTAT/devcontainer-template starter-code
-    🎤 What is your project names?
+    $> copier copy gh:UCSB-PSTAT/devcontainer-template my-awesome-project
+    🎤 What is the name of your project? (Must be unique and use lowercase, dashes -, underscores _ ONLY)
     qwer
     🎤 What language(s) will you use in this project?
     R and Python
-    🎤 Do you want to install Visual Studio Code extensions for Jupyter notebooks, R and Python?
+    🎤 Do you want to install Visual Studio Code extensions for Jupyter notebooks using R and Python?
     Yes
-    🎤 Install Jupyter Lab? Jupyter Lab is optional if using VS Code and Python extensions for development.
+    🎤 Install RStudio Server? This is optional will be accessible via Jupyterlab.
     No
-    🎤 Install Rstudio? Rstudio is optional if using VS Code and R extensions for development.
+    🎤 Install RStudio Server? This is optional if using VS Code and R extensions for development.
     No
     🎤 Install Quarto? Quarto is optional publishing system compatible with R and Python.
     No
@@ -31,6 +31,7 @@ To create your setup, follow these steps:
     Copying from template version 1.0.0
         create  .
         create  example.Rmd
+        create  README.md
         create  .devcontainer
         create  .devcontainer/Dockerfile
         create  .devcontainer/devcontainer.json
@@ -42,14 +43,15 @@ To create your setup, follow these steps:
     ```  
     The output would look similar to the follwing:  
     ```
-    jovyan@jupyter-ucsb-2dpstat-2ddevcontainer-2dtemplate-2dfpo1c8gv:~$ tree -a starter-code/
+    $> tree -a starter-code/
     starter-code/
     ├── .devcontainer
     │   ├── devcontainer.json
     │   └── Dockerfile
-    └── example.Rmd
+    ├── example.Rmd
+    └── README.md
 
-    1 directory, 3 files
+    1 directory, 4 files
     ```
 1. Use generated files:  
     - [Upload `starter-code` to a GitHub repository](#upload-to-github-repository) to start a new repository for your project.
