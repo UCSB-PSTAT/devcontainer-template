@@ -55,7 +55,6 @@ RUN R -e "dotRprofile <- file.path(Sys.getenv('HOME'), '.Rprofile'); if(!file.ex
 ### Quarto
 # versions: https://quarto.org/docs/download/_download.json
 # neat setup: https://github.com/jeremiahpslewis/reproducibility-with-quarto
-ENV QUARTO_VERSION 1.3.450
 RUN curl --silent -L --fail \
         https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb > /tmp/quarto.deb && \
     apt-get update && \
