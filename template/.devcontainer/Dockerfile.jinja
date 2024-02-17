@@ -38,9 +38,12 @@ RUN apt-get update && \
         libpq5=14.10-0ubuntu0.22.04.1 \
         libtiff-dev=4.3.0-6ubuntu0.7 \
         {%- endif %}
-        ##############################################################
-        ### Add your own dependencies as needed below this comment ###
-        ##############################################################
+        ###################################################
+        ### Add your own system dependencies installed  ###
+        ### with `apt-get` as needed below this comment ###
+        ### Example (note the backslash after name):    ###
+        ### neofetch \                                  ###
+        ###################################################
         && \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* /tmp/library-scripts
@@ -77,26 +80,48 @@ RUN wget -q https://download2.rstudio.org/server/jammy/amd64/rstudio-server-${R_
 #########################
 USER ${NB_USER}
 
+### Anaconda (conda/mamba) packages
 RUN mamba install -y -c conda-forge --freeze-installed \
+        # Jupyter setup
         jupyter-server-proxy=4.1.0 \
-        {% if 'R' in dev_language %}jupyter-rsession-proxy=2.2.0{% endif %} \
+        {% if 'R' in dev_language %}jupyter-rsession-proxy=2.2.0 \{% endif %}
+        #######################################################
+        ### Add your own conda dependencies installed with  ###
+        ### `conda/mamba` as needed below this comment      ###
+        ### Example (note the backslash after name):        ###
+        ### scikit-learn \                                  ###
+        #######################################################
         && \
-    mamba clean --all && \
-    pip install nbgitpuller && \
+    mamba clean --all
+
+### PyPI (pip) packages
+RUN pip install \ 
+        nbgitpuller \
+        {% if use_quarto %}jupyterlab-quarto==0.2.8 \{% endif %}
+        {% if ('R' in dev_language) %}radian==0.6.11 \{% endif %}
+        ################################################
+        ### Add your own PyPI dependencies installed ###
+        ### with `pip` as needed below this comment  ###
+        ### Example (note the backslash after name): ###
+        ### scikit-ntk \                             ###
+        ################################################
+        && \
     jupyter labextension enable nbgitpuller
-{% if use_quarto %}
-### Quarto
-RUN pip install jupyterlab-quarto==0.2.8
-{%- endif %}
 {% if ('R' in dev_language) %}
-### R development
-RUN pip install radian==0.6.11 && \
+### R packages
     # Versioned
-    R -q -e 'remotes::install_version("markdown", version="1.12", repos="cloud.r-project.org")' && \
+RUN R -q -e 'remotes::install_version("markdown", version="1.12", repos="cloud.r-project.org")' && \
     R -q -e 'remotes::install_version("languageserver", version="0.3.16", repos="cloud.r-project.org")' && \
     # Latest Dev Versions
     R -q -e 'remotes::install_github("nx10/httpgd")' && \
-    R -q -e 'remotes::install_github("ManuelHentschel/vscDebugger")'
+    R -q -e 'remotes::install_github("ManuelHentschel/vscDebugger")' && \
+    ##########################################################
+    ### Add your own R dependencies installed as needed    ###
+    ### below this comment but before `echo`.              ###
+    ### Example (note the `&& \` after the command):       ###
+    ### R -q -e 'install.packages("dplyr")' && \           ###
+    ##########################################################
+    echo
 {%- endif %}
 
 ### Prints Jupyter server token when terminal is opened
