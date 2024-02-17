@@ -30,8 +30,8 @@ To create your setup, follow these steps:
 
     Copying from template version 1.0.0
         create  .
-        create  example.Rmd
         create  README.md
+        create  example.Rmd
         create  .devcontainer
         create  .devcontainer/Dockerfile
         create  .devcontainer/devcontainer.json
