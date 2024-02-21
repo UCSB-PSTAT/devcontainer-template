@@ -10,7 +10,7 @@ To create your setup, follow these steps:
     ```bash
     copier copy gh:UCSB-PSTAT/devcontainer-template <name-of-project>
     ```  
-    where `<name-of-project>` is the name of the directory you wish to save your project files to. The output would look similar to the following:  
+    where `<name-of-project>` is the name of the directory you wish to save your project files to. The output would look similar to the following for a project called `my-awesome-project`:  
     ```
     $> copier copy gh:UCSB-PSTAT/devcontainer-template my-awesome-project
     🎤 What is the name of your project? (Must be unique and use lowercase, dashes -, underscores _ ONLY)
@@ -26,7 +26,7 @@ To create your setup, follow these steps:
     🎤 Do you want to include example files?
     Yes
 
-    Copying from template version 1.0.0
+    Copying from template version 1.2.0
         create  .
         create  README.md
         create  example.Rmd
@@ -37,11 +37,11 @@ To create your setup, follow these steps:
 
 1. View generated files:
     ```bash
-    tree -a starter-code
+    tree -a <name-of-project>
     ```  
     The output would look similar to the follwing:  
     ```
-    $> tree -a starter-code/
+    $> tree -a my-awesome-project
     starter-code/
     ├── .devcontainer
     │   ├── devcontainer.json
@@ -52,7 +52,7 @@ To create your setup, follow these steps:
     1 directory, 4 files
     ```
 1. Use generated files:  
-    - [Upload `starter-code` to a GitHub repository](#upload-to-github-repository) to start a new repository for your project.
+    - [Upload `my-awesome-project` to a GitHub repository](#upload-to-github-repository) to start a new repository for your project.
     - [Create and download a zip file](#download) to manually add `.devcontainer` directory and its contents to an existing project.
 
 ## Upload to GitHub Repository
@@ -63,7 +63,7 @@ To create your setup, follow these steps:
     ```
 1. Convert generated files to a repository:
     ```bash
-    cd /home/jovyan/starter-code
+    cd /home/jovyan/my-awesome-project
     git init
     git add *
     git commit -m "first commit"
@@ -72,7 +72,7 @@ To create your setup, follow these steps:
 1. Upload local repository to a new GitHub repository.  
     **Be sure to choose, "Push an existing local repository to GitHub"**:
     ```bash
-    cd /home/jovyan/starter-code
+    cd /home/jovyan/my-awesome-project
     /home/jovyan/gh repo create 
     ```
 
@@ -80,9 +80,9 @@ To create your setup, follow these steps:
 
 1. Create a zip file of `starter-code` contents:
     ```bash
-    zip -r starter-code.zip starter-code
+    zip -r starter-code.zip my-awesome-project
     ```
 1. Click on Jupyter logo to open Jupyter Lab.
-1. Download the zipfile, `starter-code.zip`
+1. Download the zipfile, `my-awesome-project.zip`
 1. Once downloaded, unzip the contents and add the `.devcontainer` folder to the root of your project folder.
 
