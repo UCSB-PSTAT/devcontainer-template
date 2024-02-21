@@ -19,8 +19,6 @@ To create your setup, follow these steps:
     R and Python
     🎤 Do you want to install Visual Studio Code extensions for Jupyter notebooks using R and Python?
     Yes
-    🎤 Install RStudio Server? This is optional will be accessible via Jupyterlab.
-    No
     🎤 Install RStudio Server? This is optional if using VS Code and R extensions for development.
     No
     🎤 Install Quarto? Quarto is optional publishing system compatible with R and Python.
