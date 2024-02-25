@@ -59,11 +59,11 @@ To create your setup, follow these steps:
 
 1. Authenticate with your GitHub account:
     ```bash
-    /home/jovyan/gh auth login
+    gh auth login
     ```
 1. Convert generated files to a repository:
     ```bash
-    cd /home/jovyan/my-awesome-project
+    cd /home/jovyan/work/
     git init
     git add *
     git commit -m "first commit"
@@ -72,8 +72,8 @@ To create your setup, follow these steps:
 1. Upload local repository to a new GitHub repository.  
     **Be sure to choose, "Push an existing local repository to GitHub"**:
     ```bash
-    cd /home/jovyan/my-awesome-project
-    /home/jovyan/gh repo create 
+    cd /home/jovyan/work/
+    gh repo create 
     ```
 
 ## Download
