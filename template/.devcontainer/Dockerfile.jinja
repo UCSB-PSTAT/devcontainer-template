@@ -1,9 +1,9 @@
 {%- if dev_language == 'R and Python' %}
-FROM docker.io/jupyter/datascience-notebook:r-4.3.1
+FROM quay.io/jupyter/datascience-notebook:r-4.3.1
 {%- elif dev_language == 'Python' %}
-FROM docker.io/jupyter/scipy-notebook:python-3.11.6
+FROM quay.io/jupyter/scipy-notebook:python-3.11.6
 {%- elif dev_language == 'R' %}
-FROM docker.io/jupyter/r-notebook:r-4.3.1
+FROM quay.io/jupyter/r-notebook:r-4.3.1
 {%- endif %}
 
 ### Environment variables
