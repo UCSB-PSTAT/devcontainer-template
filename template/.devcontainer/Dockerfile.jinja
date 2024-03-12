@@ -33,12 +33,12 @@ RUN apt-get update && \
         tmux=3.2a-4ubuntu0.2 \
         {%- if use_rstudio %}
         # Dependencies for RStudio
-        psmisc=23.4-2build3 \
-        lsb-release=11.1.0ubuntu4 \
+        psmisc \
+        lsb-release \
         libssl-dev \
-        libclang-dev=1:14.0-55~exp2 \
-        libpq5=14.10-0ubuntu0.22.04.1 \
-        libtiff-dev=4.3.0-6ubuntu0.7 \
+        libclang-dev \
+        libpq5 \
+        libtiff-dev
         {%- endif %}
         ###################################################
         ### Add your own system dependencies installed  ###
@@ -118,8 +118,8 @@ RUN pip install \
     # Versioned
 RUN R -q -e 'remotes::install_version("markdown", version="1.12", repos="cloud.r-project.org")' && \
     R -q -e 'remotes::install_version("languageserver", version="0.3.16", repos="cloud.r-project.org")' && \
+    R -q -e 'remotes::install_version("httpgd", version="2.0.1", repos="cloud.r-project.org")' && \
     # Latest Dev Versions
-    R -q -e 'remotes::install_github("nx10/httpgd")' && \
     R -q -e 'remotes::install_github("ManuelHentschel/vscDebugger")' && \
     ##########################################################
     ### Add your own R dependencies installed as needed    ###
