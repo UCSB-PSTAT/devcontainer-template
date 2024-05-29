@@ -1,21 +1,21 @@
-{%- if dev_language == 'R and Python' %}
+{% if dev_language == 'R and Python' %}
 FROM quay.io/jupyter/datascience-notebook:r-4.3.1
-{%- elif dev_language == 'Python' %}
+{% elif dev_language == 'Python' %}
 FROM quay.io/jupyter/scipy-notebook:python-3.11.6
-{%- elif dev_language == 'R' %}
+{% elif dev_language == 'R' %}
 FROM quay.io/jupyter/r-notebook:r-4.3.1
-{%- endif %}
+{% endif %}
 
 ### Environment variables
 ENV GITHUB_CLI_VERSION 2.30.0
-{%- if use_quarto or use_rstudio %}
-{%- if use_quarto %}
+{% if use_quarto or use_rstudio %}
+{% if use_quarto %}
 ENV QUARTO_VERSION 1.4.549
-{%- endif %}
-{%- if use_rstudio %}
+{% endif %}
+{% if use_rstudio %}
 ENV R_STUDIO_VERSION 2023.12.1-402
-{%- endif %}
-{%- endif %}
+{% endif %}
+{% endif %}
 
 ###########################
 ### SYSTEM INSTALLATION ###
@@ -31,7 +31,7 @@ RUN apt-get update && \
         curl \
         g++ \
         tmux \
-        {%- if use_rstudio %}
+        {% if use_rstudio %}
         # Dependencies for RStudio
         psmisc \
         lsb-release \
@@ -39,7 +39,7 @@ RUN apt-get update && \
         libclang-dev \
         libpq5 \
         libtiff-dev \
-        {%- endif %}
+        {% endif %}
         ###################################################
         ### Add your own system dependencies installed  ###
         ### with `apt-get` as needed below this comment ###
@@ -49,15 +49,17 @@ RUN apt-get update && \
         && \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* /tmp/library-scripts
-{%- if 'R' in dev_language %}
+{% if 'R' in dev_language %}
 
 ### R compiler settings
-RUN R -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ dir.create(dotR) }; Makevars <- file.path(dotR, 'Makevars'); if (!file.exists(Makevars)){  file.create(Makevars) }; cat('\nCXX14FLAGS=-O3 -fPIC -Wno-unused-variable -Wno-unused-function', 'CXX14 = g++ -std=c++1y -fPIC', 'CXX = g++', 'CXX11 = g++', file = Makevars, sep = '\n', append = TRUE)"
+RUN R -e "dotR <- file.path(Sys.getenv('HOME'), '.R'); if(!file.exists(dotR)){ dir.create(dotR) }; Makevars <- file.path(dotR, 'Makevars'); if (!file.exists(Makevars)){  file.create(Makevars) }; cat('\nCXXFLAGS=-O3 -fPIC -Wno-unused-variable -Wno-unused-function', 'CXX14 = g++ -std=c++1y -fPIC', 'CXX = g++', 'CXX11 = g++', file = Makevars, sep = '\n', append = TRUE)"
+RUN chmod 666 ${HOME}/.R/Makevars
 
 ### CRAN mirror
 RUN R -e "dotRprofile <- file.path(Sys.getenv('HOME'), '.Rprofile'); if(!file.exists(dotRprofile)){ file.create(dotRprofile) }; cat('local({r <- getOption(\"repos\")', 'r[\"CRAN\"] <- \"https://cloud.r-project.org\"', 'options(repos=r)', '})', file = dotRprofile, sep = '\n', append = TRUE)"
-{%- endif %}
-{%- if use_quarto %}
+RUN chmod 666 ${HOME}/.Rprofile
+{% endif %}
+{% if use_quarto %}
 
 ### Quarto
 # versions: https://quarto.org/docs/download/_download.json
@@ -68,8 +70,8 @@ RUN curl --silent -L --fail \
     apt-get install -y --no-install-recommends /tmp/quarto.deb && \
     rm -rf /tmp/quarto.deb /var/lib/apt/lists/* /tmp/library-script && \
     apt-get clean
-{%- endif %}
-{%- if use_rstudio %}
+{% endif %}
+{% if use_rstudio %}
 
 ### RStudio from source
 RUN wget -q https://download2.rstudio.org/server/jammy/amd64/rstudio-server-${R_STUDIO_VERSION}-amd64.deb && \
@@ -78,7 +80,7 @@ RUN wget -q https://download2.rstudio.org/server/jammy/amd64/rstudio-server-${R_
     apt-get clean && \
     chmod 777 /var/run/rstudio-server && \
     chmod +t /var/run/rstudio-server
-{%- endif %}
+{% endif %}
 
 #########################
 ### USER INSTALLATION ###
@@ -89,7 +91,9 @@ USER ${NB_USER}
 RUN mamba install -y -c conda-forge --freeze-installed \
         # Jupyter setup
         jupyter-server-proxy=4.1.0 \
-        {%- if 'R' in dev_language %}jupyter-rsession-proxy=2.2.0 \{%- endif %}
+        {% if 'R' in dev_language %}
+        jupyter-rsession-proxy=2.2.0 \
+        {% endif %}
         #######################################################
         ### Add your own conda dependencies installed with  ###
         ### `conda/mamba` as needed below this comment      ###
@@ -102,8 +106,12 @@ RUN mamba install -y -c conda-forge --freeze-installed \
 ### PyPI (pip) packages
 RUN pip install \ 
         nbgitpuller \
-        {%- if use_quarto %}jupyterlab-quarto==0.2.8 \{%- endif %}
-        {%- if ('R' in dev_language) %}radian==0.6.11 \{%- endif %}
+        {% if use_quarto %}
+        jupyterlab-quarto==0.2.8 \
+        {% endif %}
+        {% if ('R' in dev_language) %}
+        radian==0.6.11 \
+        {% endif %}
         ################################################
         ### Add your own PyPI dependencies installed ###
         ### with `pip` as needed below this comment  ###
@@ -112,7 +120,7 @@ RUN pip install \
         ################################################
         && \
     jupyter labextension enable nbgitpuller
-{%- if ('R' in dev_language) %}
+{% if ('R' in dev_language) %}
 
 ### R packages
     # Versioned
@@ -128,7 +136,7 @@ RUN R -q -e 'remotes::install_version("markdown", version="1.12", repos="cloud.r
     ### R -q -e 'install.packages("dplyr")' && \           ###
     ##########################################################
     echo
-{%- endif %}
+{% endif %}
 
 ### GitHub CLI Installation
 RUN wget https://github.com/cli/cli/releases/download/v${GITHUB_CLI_VERSION}/gh_${GITHUB_CLI_VERSION}_linux_amd64.tar.gz -O - | \
