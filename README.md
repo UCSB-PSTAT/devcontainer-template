@@ -12,9 +12,9 @@ To create your setup, follow these steps:
     ```  
     where `<name-of-project>` is the name of the directory you wish to save your project files to. The output would look similar to the following for a project called `my-awesome-project`:  
     ```
-    $> copier copy gh:UCSB-PSTAT/devcontainer-template my-awesome-project
+    $> copier copy gh:UCSB-PSTAT/devcontainer-template my-awesome-project-folder
     🎤 What is the name of your project? (Must be unique and use lowercase, dashes -, underscores _ ONLY)
-    qwer
+    my-awesome-project
     🎤 What language(s) will you use in this project?
     R and Python
     🎤 Do you want to install Visual Studio Code extensions for Jupyter notebooks using R and Python?
@@ -26,7 +26,7 @@ To create your setup, follow these steps:
     🎤 Do you want to include example files?
     Yes
 
-    Copying from template version 1.2.0
+    Copying from template version 1.4.2
         create  .
         create  README.md
         create  example.Rmd
@@ -52,7 +52,7 @@ To create your setup, follow these steps:
     1 directory, 4 files
     ```
 1. Use generated files:  
-    - [Upload `my-awesome-project` to a GitHub repository](#upload-to-github-repository) to start a new repository for your project.
+    - [Upload `my-awesome-project-folder` to a GitHub repository](#upload-to-github-repository) to start a new repository for your project.
     - [Create and download a zip file](#download) to manually add `.devcontainer` directory and its contents to an existing project.
 
 ## Upload to GitHub Repository
@@ -80,7 +80,7 @@ To create your setup, follow these steps:
 
 1. Create a zip file of `starter-code` contents:
     ```bash
-    zip -r starter-code.zip my-awesome-project
+    zip -r my-awesome-project.zip my-awesome-project-folder
     ```
 1. Click on Jupyter logo to open Jupyter Lab.
 1. Download the zipfile, `my-awesome-project.zip`
