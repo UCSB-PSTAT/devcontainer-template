@@ -8,9 +8,9 @@ To create your setup, follow these steps:
 
 1. Enter the following command to generate your project starter code: 
     ```bash
-    copier copy gh:UCSB-PSTAT/devcontainer-template <name-of-project>
+    copier copy gh:UCSB-PSTAT/devcontainer-template <name-of-project-directory>
     ```  
-    where `<name-of-project>` is the name of the directory you wish to save your project files to. The output would look similar to the following for a project called `my-awesome-project`:  
+    where `<name-of-project-directory>` is the name of the directory you wish to save your project files to. The output would look similar to the following for a project called `my-awesome-project`:  
     ```
     $> copier copy gh:UCSB-PSTAT/devcontainer-template my-awesome-project-folder
     🎤 What is the name of your project? (Must be unique and use lowercase, dashes -, underscores _ ONLY)
@@ -41,7 +41,7 @@ To create your setup, follow these steps:
     ```  
     The output would look similar to the follwing:  
     ```
-    $> tree -a my-awesome-project
+    $> tree -a my-awesome-project-folder
     starter-code/
     ├── .devcontainer
     │   ├── devcontainer.json
