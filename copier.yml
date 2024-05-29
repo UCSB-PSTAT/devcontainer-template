@@ -36,6 +36,10 @@ include_examples:
 
 _subdirectory: template
 
+_envops:
+    trim_blocks: true
+    lstrip_blocks: true
+
 _exclude:
     - "copier.yml"
     - ".git"
