@@ -91,7 +91,7 @@ USER ${NB_USER}
 RUN mamba install -y -c conda-forge --freeze-installed \
         # Jupyter setup
         jupyter-server-proxy=4.1.0 \
-        {% if 'R' in dev_language %}
+        {% if use_rstudio %}
         jupyter-rsession-proxy=2.2.0 \
         {% endif %}
         #######################################################
