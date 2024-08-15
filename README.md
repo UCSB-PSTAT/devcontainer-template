@@ -1,4 +1,4 @@
-# UCSB PSTAT Department Development Container Template
+# Development Container Configuration Generator Template
 
 This template repository creates a starter [development container](https://computing.pstat.ucsb.edu/docs/devcontainer.html) setup suitable for use in the department research computing server.
 
