@@ -1,4 +1,4 @@
-# Development Container Configuration Generator Template
+# Development Container Configuration Code Generator
 
 This template repository creates a starter [development container](https://computing.pstat.ucsb.edu/docs/devcontainer.html) setup suitable for use in the department research computing server.
 
