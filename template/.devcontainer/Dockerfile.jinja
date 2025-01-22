@@ -82,6 +82,13 @@ RUN wget -q https://download2.rstudio.org/server/jammy/amd64/rstudio-server-${R_
     chmod +t /var/run/rstudio-server
 {% endif %}
 
+# Provide passwordless sudo access to user jovyan for system package installation
+RUN groupadd jovyan && \ 
+    usermod -g jovyan -aG users jovyan
+
+RUN usermod -aG sudo jovyan && \
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
 #########################
 ### USER INSTALLATION ###
 #########################
