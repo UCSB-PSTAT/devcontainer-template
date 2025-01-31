@@ -124,18 +124,17 @@ RUN pip install \
 
 ### R packages
     # Versioned
-RUN R -q -e 'remotes::install_version("markdown", version="1.12", repos="cloud.r-project.org")' && \
-    R -q -e 'remotes::install_version("languageserver", version="0.3.16", repos="cloud.r-project.org")' && \
-    R -q -e 'remotes::install_version("httpgd", version="2.0.1", repos="cloud.r-project.org")' && \
+RUN R -q -e 'remotes::install_version("markdown", version="1.12", repos="cloud.r-project.org")'
+RUN R -q -e 'remotes::install_version("languageserver", version="0.3.16", repos="cloud.r-project.org")'
+RUN R -q -e 'remotes::install_version("httpgd", version="2.0.1", repos="cloud.r-project.org")'
     # Latest Dev Versions
-    R -q -e 'remotes::install_github("ManuelHentschel/vscDebugger")' && \
+RUN R -q -e 'remotes::install_github("ManuelHentschel/vscDebugger")'
     ##########################################################
     ### Add your own R dependencies installed as needed    ###
     ### below this comment but before `echo`.              ###
-    ### Example (note the `&& \` after the command):       ###
-    ### R -q -e 'install.packages("dplyr")' && \           ###
+    ### Example (Note the RUN in front of the R command):  ###
+    ### RUN R -q -e 'install.packages("dplyr")'            ###
     ##########################################################
-    echo
 {% endif %}
 
 ### GitHub CLI Installation
