@@ -16,8 +16,7 @@
     "runArgs": [
         "--user=1000:100",
         "--userns=keep-id:uid=1000,gid=100",  // required for Podman, remove line if using Docker
-        "--name={{ project_name }}", // needs to be unique
-        "--hostname={{ project_name }}_container" // needs to be unique
+        "--name={{ project_name }}" // needs to be unique
     ],
 
     "forwardPorts": [8888],
