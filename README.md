@@ -1,4 +1,4 @@
-# Development Container Configuration Code Generator
+# Development Container Configuration Code Generator - Docker
 
 This template repository creates a starter [development container](https://computing.pstat.ucsb.edu/docs/devcontainer.html) setup suitable for use in the department research computing server.
 
@@ -8,11 +8,11 @@ To create your setup, follow these steps:
 
 1. Enter the following command to generate your project starter code: 
     ```bash
-    copier copy gh:UCSB-PSTAT/devcontainer-template <name-of-project-directory>
+    copier copy --vcs-ref docker gh:UCSB-PSTAT/devcontainer-template <project-directory-path>
     ```  
-    where `<name-of-project-directory>` is the name of the directory you wish to save your project files to. The output would look similar to the following for a project called `my-awesome-project`:  
+    where `<project-directory-path>` is the name of the directory you wish to save your project files to. The output would look similar to the following for a project called `my-awesome-project`:  
     ```
-    $> copier copy gh:UCSB-PSTAT/devcontainer-template my-awesome-project-folder
+    $> copier copy --vcs-ref docker gh:UCSB-PSTAT/devcontainer-template my-awesome-project-folder
     🎤 What is the name of your project? (Must be unique and use lowercase, dashes -, underscores _ ONLY)
     my-awesome-project
     🎤 What language(s) will you use in this project?
@@ -37,7 +37,7 @@ To create your setup, follow these steps:
 
 1. View generated files:
     ```bash
-    tree -a <name-of-project>
+    tree -a <project-directory-path>
     ```  
     The output would look similar to the follwing:  
     ```
