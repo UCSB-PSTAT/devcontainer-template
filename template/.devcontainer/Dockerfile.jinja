@@ -1,9 +1,15 @@
+{% if use_gpu == 'no' %}
 {% if dev_language == 'R and Python' %}
 FROM quay.io/jupyter/datascience-notebook:r-4.3.3
 {% elif dev_language == 'Python' %}
 FROM quay.io/jupyter/scipy-notebook:python-3.12.8
 {% elif dev_language == 'R' %}
 FROM quay.io/jupyter/r-notebook:r-4.3.3
+{% endif %}
+{% elif use_gpu == 'pytorch' %}
+FROM quay.io/jupyter/pytorch-notebook:cuda12-python-3.12.8
+{% elif use_gpu == 'tensorflow' %}
+FROM quay.io/jupyter/tensorflow-notebook:cuda-python-3.12.8
 {% endif %}
 
 ### Environment variables
@@ -81,13 +87,6 @@ RUN wget -q https://download2.rstudio.org/server/jammy/amd64/rstudio-server-${R_
     chmod 777 /var/run/rstudio-server && \
     chmod +t /var/run/rstudio-server
 {% endif %}
-
-# Provide passwordless sudo access to user jovyan for system package installation
-RUN groupadd jovyan && \ 
-    usermod -g jovyan -aG users jovyan
-
-RUN usermod -aG sudo jovyan && \
-    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 #########################
 ### USER INSTALLATION ###
