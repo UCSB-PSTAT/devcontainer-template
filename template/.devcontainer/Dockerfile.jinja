@@ -1,19 +1,19 @@
 {% if dev_language == 'R and Python' %}
-FROM quay.io/jupyter/datascience-notebook:r-4.3.1
+FROM quay.io/jupyter/datascience-notebook:r-4.3.3
 {% elif dev_language == 'Python' %}
-FROM quay.io/jupyter/scipy-notebook:python-3.11.6
+FROM quay.io/jupyter/scipy-notebook:python-3.12.8
 {% elif dev_language == 'R' %}
-FROM quay.io/jupyter/r-notebook:r-4.3.1
+FROM quay.io/jupyter/r-notebook:r-4.3.3
 {% endif %}
 
 ### Environment variables
-ENV GITHUB_CLI_VERSION 2.30.0
+ENV GITHUB_CLI_VERSION 2.66.1
 {% if use_quarto or use_rstudio %}
 {% if use_quarto %}
-ENV QUARTO_VERSION 1.4.549
+ENV QUARTO_VERSION 1.6.40
 {% endif %}
 {% if use_rstudio %}
-ENV R_STUDIO_VERSION 2023.12.1-402
+ENV R_STUDIO_VERSION 2024.12.0-467
 {% endif %}
 {% endif %}
 
@@ -82,6 +82,13 @@ RUN wget -q https://download2.rstudio.org/server/jammy/amd64/rstudio-server-${R_
     chmod +t /var/run/rstudio-server
 {% endif %}
 
+# Provide passwordless sudo access to user jovyan for system package installation
+RUN groupadd jovyan && \ 
+    usermod -g jovyan -aG users jovyan
+
+RUN usermod -aG sudo jovyan && \
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
 #########################
 ### USER INSTALLATION ###
 #########################
@@ -90,9 +97,9 @@ USER ${NB_USER}
 ### Anaconda (conda/mamba) packages
 RUN mamba install -y -c conda-forge --freeze-installed \
         # Jupyter setup
-        jupyter-server-proxy=4.1.0 \
+        jupyter-server-proxy=4.4.0 \
         {% if use_rstudio %}
-        jupyter-rsession-proxy=2.2.0 \
+        jupyter-rsession-proxy=2.3.0 \
         {% endif %}
         #######################################################
         ### Add your own conda dependencies installed with  ###
@@ -107,10 +114,10 @@ RUN mamba install -y -c conda-forge --freeze-installed \
 RUN pip install \ 
         nbgitpuller \
         {% if use_quarto %}
-        jupyterlab-quarto==0.2.8 \
+        jupyterlab-quarto==0.3.5 \
         {% endif %}
         {% if ('R' in dev_language) %}
-        radian==0.6.11 \
+        radian==0.6.13 \
         {% endif %}
         ################################################
         ### Add your own PyPI dependencies installed ###
@@ -124,9 +131,9 @@ RUN pip install \
 
 ### R packages
     # Versioned
-RUN R -q -e 'remotes::install_version("markdown", version="1.12", repos="cloud.r-project.org")'
+RUN R -q -e 'remotes::install_version("markdown", version="1.13", repos="cloud.r-project.org")'
 RUN R -q -e 'remotes::install_version("languageserver", version="0.3.16", repos="cloud.r-project.org")'
-RUN R -q -e 'remotes::install_version("httpgd", version="2.0.1", repos="cloud.r-project.org")'
+RUN R -q -e 'remotes::install_version("httpgd", version="2.0.2", repos="cloud.r-project.org")'
     # Latest Dev Versions
 RUN R -q -e 'remotes::install_github("ManuelHentschel/vscDebugger")'
     ##########################################################
