@@ -2,7 +2,7 @@
     "name": "{{ project_name }}",
     "build": {
         "dockerfile": "Dockerfile",
-        "options": ["--format=docker"]        // required for Podman, remove line if using Docker
+        "options": ["--format=docker"] // required for Podman, remove line if using Docker
     },
 
     "updateRemoteUserUID": false,
@@ -15,8 +15,23 @@
 
     "runArgs": [
         "--user=1000:100",
-        "--userns=keep-id:uid=1000,gid=100",  // required for Podman, remove line if using Docker
-        "--name={{ project_name }}" // needs to be unique
+        // required for Podman, remove line if using Docker
+        "--userns=keep-id:uid=1000,gid=100",
+        {% if use_gpu == 'no' or use_gpu == null %}
+        // needs to be unique
+        "--name={{ project_name }}"
+        {% elif use_gpu == 'pytorch' or use_gpu == 'tensorflow' %}
+        // needs to be unique
+        "--name={{ project_name }}", 
+        "--security-opt=label=disable",
+        /* To enable GPU access, use terminal command `nvidia-smi -L`
+           outside of container to view available GPUs. From there, 
+           uncomment the `--device...` line below, set the device 
+           number(s), and rebuild the container.
+             ex. --device=nvidia.com/gpu=device=1   // Single GPU
+             ex. --device=nvidia.com/gpu=device=0,1 // Two GPUs */
+        // "--device=nvidia.com/gpu=device="
+        {% endif %}
     ],
 
     "forwardPorts": [8888],
@@ -32,10 +47,14 @@
     "customizations": {
         "vscode": {
             "settings": {
-                {% if 'Python' in dev_language %}
+                {% if dev_language == 'Python' %}
+                "python.defaultInterpreterPath": "/opt/conda/bin/python"
+                {% elif dev_language == 'R' %}
+                "r.rterm.linux": "/opt/conda/bin/radian",
+                "r.bracketedPaste": true,
+                "r.plot.useHttpgd": true
+                {% elif dev_language == 'R and Python' %}
                 "python.defaultInterpreterPath": "/opt/conda/bin/python",
-                {% endif %}
-                {% if 'R' in dev_language %}
                 "r.rterm.linux": "/opt/conda/bin/radian",
                 "r.bracketedPaste": true,
                 "r.plot.useHttpgd": true

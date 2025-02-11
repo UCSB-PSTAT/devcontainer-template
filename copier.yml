@@ -14,6 +14,15 @@ dev_language:
         Python: null
         R and Python: null
 
+use_gpu:
+    type: str
+    help: Do you plan on using a GPU based server for this project (roble, tesla1, Jetstream2 GPU instances)? You will need to check GPU instructions in the PSTAT computing wiki or devcontainer.json file to complete enabling GPU access.
+    choices:
+        No GPU: no
+        Yes (PyTorch): pytorch
+        Yes (TensorFlow): tensorflow
+    when: "{{ dev_language == 'Python' }}"
+
 use_vscode_ext:
     type: bool
     help: Do you want to install Visual Studio Code extensions for Jupyter notebooks using {{ dev_language }}?
