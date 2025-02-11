@@ -26,7 +26,7 @@ To create your setup, follow these steps:
     🎤 Do you want to include example files?
     Yes
 
-    Copying from template version 1.4.2
+    Copying from template version 1.X.X
         create  .
         create  README.md
         create  example.Rmd

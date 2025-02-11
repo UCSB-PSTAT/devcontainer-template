@@ -16,7 +16,7 @@ dev_language:
 
 use_gpu:
     type: str
-    help: Do you plan on using a GPU based server for this project (roble, tesla1, Jetstream2 GPU instances)?
+    help: Do you plan on using a GPU based server for this project (roble, tesla1, Jetstream2 GPU instances)? You will need to check GPU instructions in the PSTAT computing wiki or devcontainer.json file to complete enabling GPU access.
     choices:
         No GPU: no
         Yes (PyTorch): pytorch
